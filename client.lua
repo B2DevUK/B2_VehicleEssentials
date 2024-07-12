@@ -9,7 +9,13 @@ local function toggleSeatbelt()
     local playerPed = GetPlayerPed(-1)
     if IsPedInAnyVehicle(playerPed, false) then
         local vehicle = GetVehiclePedIsIn(playerPed, false)
-        local seat = GetPedVehicleSeat(playerPed)
+        local seat = -2
+        for i = -1, GetVehicleMaxNumberOfPassengers(vehicle) - 1 do
+            if GetPedInVehicleSeat(vehicle, i) == playerPed then
+                seat = i
+                break
+            end
+        end
         if seatbeltStatus[seat] then
             SetPedConfigFlag(playerPed, 32, false) -- Seatbelt off
             seatbeltStatus[seat] = false
@@ -47,7 +53,7 @@ end)
 -- Enable or disable boats
 Citizen.CreateThread(function()
     while true do
-        SetBoatDensityMultiplierThisFrame(Config.EnableBoats and 1.0 or 0.0)
+        SetRandomBoats(Config.EnableBoats)
         Citizen.Wait(1000)
     end
 end)
@@ -126,7 +132,7 @@ Citizen.CreateThread(function()
             local playerPed = GetPlayerPed(-1)
             if IsPedInAnyVehicle(playerPed, false) then
                 local vehicle = GetVehiclePedIsIn(playerPed, false)
-                SetVehicleWeaponDisabled(vehicle, true)
+                SetVehicleWeaponsDisabled(vehicle, 1)
             end
         end
         Citizen.Wait(1000)
