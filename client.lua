@@ -1,6 +1,3 @@
--- Load configuration
-local Config = Config or {}
-
 local function getTrafficDensity(playerCount)
     local scale = (playerCount / Config.MaxPlayers)
     return Config.MaxTrafficDensity - (scale * (Config.MaxTrafficDensity - Config.MinTrafficDensity))
