@@ -1,6 +1,28 @@
+-- Load configuration
+local Config = Config or {}
+
 local function getTrafficDensity(playerCount)
     local scale = (playerCount / Config.MaxPlayers)
     return Config.MaxTrafficDensity - (scale * (Config.MaxTrafficDensity - Config.MinTrafficDensity))
+end
+
+local seatbeltStatus = {}
+
+local function toggleSeatbelt()
+    local playerPed = GetPlayerPed(-1)
+    if IsPedInAnyVehicle(playerPed, false) then
+        local vehicle = GetVehiclePedIsIn(playerPed, false)
+        local seat = GetPedVehicleSeat(playerPed)
+        if seatbeltStatus[seat] then
+            SetPedConfigFlag(playerPed, 32, false) -- Seatbelt off
+            seatbeltStatus[seat] = false
+            TriggerEvent('chat:addMessage', { args = { '^1Seatbelt', 'Seatbelt off' } })
+        else
+            SetPedConfigFlag(playerPed, 32, true) -- Seatbelt on
+            seatbeltStatus[seat] = true
+            TriggerEvent('chat:addMessage', { args = { '^2Seatbelt', 'Seatbelt on' } })
+        end
+    end
 end
 
 -- Dynamic Traffic Management
@@ -56,8 +78,19 @@ end)
 
 -- Automatic Seatbelts
 AddEventHandler('playerEnteredVehicle', function(vehicle, seat)
-    if Config.AutoSeatbeltOnEntry and seat == -1 then
-        SetPedConfigFlag(GetPlayerPed(-1), 32, true)
+    if Config.AutoSeatbeltOnEntry then
+        SetPedConfigFlag(GetPlayerPed(-1), 32, true) -- Seatbelt on
+        seatbeltStatus[seat] = true
+    end
+end)
+
+-- Manual Seatbelts
+Citizen.CreateThread(function()
+    while true do
+        if IsControlJustReleased(0, Config.SeatbeltKey) then
+            toggleSeatbelt()
+        end
+        Citizen.Wait(0)
     end
 end)
 
@@ -86,5 +119,34 @@ Citizen.CreateThread(function()
             end
         end
         Citizen.Wait(500)
+    end
+end)
+
+-- Disable vehicle weapons
+Citizen.CreateThread(function()
+    while true do
+        if Config.DisableVehicleWeapons then
+            local playerPed = GetPlayerPed(-1)
+            if IsPedInAnyVehicle(playerPed, false) then
+                local vehicle = GetVehiclePedIsIn(playerPed, false)
+                SetVehicleWeaponDisabled(vehicle, true)
+            end
+        end
+        Citizen.Wait(1000)
+    end
+end)
+
+-- NPC Driving Style
+Citizen.CreateThread(function()
+    while true do
+        local playerPed = GetPlayerPed(-1)
+        local vehicle = GetVehiclePedIsIn(playerPed, false)
+        if vehicle ~= 0 then
+            local driver = GetPedInVehicleSeat(vehicle, -1)
+            if driver ~= 0 and not IsPedAPlayer(driver) then
+                SetDriveTaskDrivingStyle(driver, Config.MentalState.DrivingStyle)
+            end
+        end
+        Citizen.Wait(1000)
     end
 end)
