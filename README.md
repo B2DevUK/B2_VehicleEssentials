@@ -137,6 +137,3 @@ Contributions are welcome! Please submit pull requests or open issues to improve
 - All contributors to this project.
 
 Enjoy the resource and happy driving!
-```
-
-This updated `README.md` includes details about the NPC driving styles, allowing server admins to customize the behavior of NPC drivers on their server. Adjust the descriptions and examples as needed based on your preferences.
