@@ -1,4 +1,4 @@
-# b2_vehicleEssentials v1.1.0
+# b2_vehicleEssentials V1.1.0
 
 A comprehensive FiveM script for vehicle management including dynamic traffic control, automatic and manual seatbelts, speed limiters, realistic vehicle damage, and more.
 
@@ -89,11 +89,11 @@ Config.DispatchServices = {
 -- Realistic Vehicle Damage System
 Config.DamageSystem = {
     enabled = true, -- Toggle entire damage system
-    deformationMultiplier = 2.0, -- increased deformation damage
-    collisionDamageExponent = 1.5, -- increased collision damage
-    engineDamageExponent = 2.0, -- increased engine damage
-    cascadingFailureSpeedFactor = 15.0, -- increased cascading failure speed
-    degradingFailureSpeedFactor = 3.0, -- increased degrading failure speed
+    deformationMultiplier = 2.0, -- Further increased deformation damage
+    collisionDamageExponent = 1.5, -- Further increased collision damage
+    engineDamageExponent = 2.0, -- Further increased engine damage
+    cascadingFailureSpeedFactor = 15.0, -- Further increased cascading failure speed
+    degradingFailureSpeedFactor = 3.0, -- Further increased degrading failure speed
     degradingFailureThreshold = 500.0, -- Threshold for degrading failure
     cascadingFailureThreshold = 250.0, -- Threshold for cascading failure
     engineSafeGuard = 50.0, -- Safeguard value for engine
@@ -113,36 +113,98 @@ Config.DamageSystem = {
     },
     collisionDamage = {
         enabled = true,
-        multiplier = 2.0 -- increased collision damage multiplier
+        multiplier = 2.0 -- Further increased collision damage multiplier
     },
     deformationDamage = {
         enabled = true,
-        multiplier = 2.0 -- increased deformation damage multiplier
+        multiplier = 2.0 -- Further increased deformation damage multiplier
     },
     engineDamage = {
         enabled = true,
-        multiplier = 2.0 -- increased engine damage multiplier
+        multiplier = 2.0 -- Further increased engine damage multiplier
     },
     bodyDamage = {
         enabled = true,
-        multiplier = 2.0 -- increased body damage multiplier
+        multiplier = 2.0 -- Further increased body damage multiplier
     },
     petrolTankDamage = {
         enabled = true,
-        multiplier = 2.0 -- increased petrol tank damage multiplier
+        multiplier = 2.0 -- Further increased petrol tank damage multiplier
     },
 }
 
 -- Allow players to steal NPC cars
 Config.AllowStealNPCCars = true
+
 ```
 
 ## Usage
 
-- **Toggle Seatbelt**: Press the configured key (`U` by default) to toggle the seatbelt.
-- **Monitor Traffic**: The script will automatically adjust traffic based on the number of players online.
-- **Realistic Damage**: Experience enhanced vehicle damage with explosions, wheel fall-offs, and tire punctures.
-- **Steal NPC Cars**: Carjack NPCs and drive away with the engine running.
+The script runs automatically based on the configurations set in `config.lua`. Adjust settings to fit your server's needs.
+
+### Driving Style Options
+
+You can set different driving styles for NPCs using the following flags in the `Config.MentalState.DrivingStyle` option:
+
+- `786603`: Normal driving (default behavior)
+- `1074528293`: Normal driving but avoiding obstacles more aggressively
+- `2883621`: Fast and aggressive driving
+- `6`: Very cautious driving
+- `1076`: Sometimes stop before junctions, drive normally otherwise
+- `7`: Ignore all traffic lights and drive normally
+- `16777216`: Follow traffic laws strictly
+- `536871299`: Very careful, stops a lot
+- `536871044`: Reverse with care
+- `536871045`: Reverse very carefully
+- `536870912`: Very slow driving, usually used for non-road vehicles
+- `536871356`: Use paths only (no roads)
+- `16777215`: A combination of cautious and aggressive
+
+### Features
+
+- **Dynamic Traffic Management**: 
+  - The traffic density dynamically adjusts based on the number of players online.
+  - Set `Config.DynamicTrafficManagement` to `true` to enable this feature.
+
+- **Automatic Seatbelts**: 
+  - Automatically applies seatbelts when the player enters a vehicle.
+  - Set `Config.AutoSeatbeltOnEntry` to `true` to enable this feature.
+
+- **Manual Seatbelts**: 
+  - Toggle seatbelts manually using a customizable keybind.
+  - Set the keybind using `Config.SeatbeltKey`.
+
+- **Speed Limiter**: 
+  - Configure global and zone-specific speed limits.
+  - Global speed limit is set via `Config.GlobalSpeedLimit`.
+  - Zone-specific speed limits are set via `Config.SpeedZones` array.
+
+- **Traffic, Pedestrians, and Parked Vehicles**: 
+  - Adjust the amount of traffic, pedestrians, and parked vehicles by setting `Config.TrafficAmount`, `Config.PedestrianAmount`, and `Config.ParkedAmount`.
+
+- **Enable/Disable Services**: 
+  - Enable or disable dispatch services, boats, trains, and garbage trucks via `Config.EnableDispatch`, `Config.EnableBoats`, `Config.EnableTrains`, and `Config.EnableGarbageTrucks`.
+
+- **Disable Vehicle Weapons**: 
+  - Prevent vehicles from giving weapons to players by setting `Config.DisableVehicleWeapons` to `true`.
+
+- **NPC Driving Style**: 
+  - Configure NPC driving styles using `Config.MentalState.DrivingStyle`.
+
+### Export Usage
+
+To change the NPC driving style dynamically from other scripts, use the following export:
+
+```lua
+exports.b2_vehicleEssentials:ChangeNPCDrivingStyle(drivingStyle)
+```
+
+Example usage in another script:
+
+```lua
+-- Change NPC driving style to fast and aggressive
+exports.b2_vehicleEssentials:ChangeNPCDrivingStyle(2883621)
+```
 
 ## Development
 
