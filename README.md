@@ -1,5 +1,7 @@
 # b2_vehicleEssentials V1.1.0
 
+## SUPPORT DISCORD: discord.gg/KZRBA6H5kR 
+
 A comprehensive FiveM script for vehicle management including dynamic traffic control, automatic and manual seatbelts, speed limiters, realistic vehicle damage, and more.
 
 ## Features
