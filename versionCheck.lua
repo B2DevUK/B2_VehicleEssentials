@@ -1,4 +1,4 @@
-local currentVersion = "1.1.1"
+local currentVersion = "1.2.0"
 -- GITHUB VERSION CHECK
 function fetchLatestVersion(callback)
     PerformHttpRequest("https://api.github.com/repos/B2DevUK/B2_VehicleEssentials/releases/latest", function(statusCode, response, headers)

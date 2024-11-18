@@ -297,28 +297,35 @@ Citizen.CreateThread(function()
     end
 end)
 
--- Keep engine running when player carjacks NPC
 Citizen.CreateThread(function()
     while true do
-        if Config.AllowStealNPCCars then
-            local playerPed = PlayerPedId()
-            if IsPedJacking(playerPed) then
-                local targetVehicle = GetVehiclePedIsTryingToEnter(playerPed)
-                if DoesEntityExist(targetVehicle) and not IsVehicleSeatFree(targetVehicle, -1) then
-                    local targetPed = GetPedInVehicleSeat(targetVehicle, -1)
-                    if not IsPedAPlayer(targetPed) then
-                        TaskLeaveVehicle(targetPed, targetVehicle, 16)
-                        Citizen.Wait(500)
-                        TaskWarpPedIntoVehicle(playerPed, targetVehicle, -1)
-                        SetVehicleEngineOn(targetVehicle, true, true, false)
-                        if Config.Debug then print("Player carjacked NPC vehicle") end
-                    end
-                end
+        local playerPed = PlayerPedId()
+        local targetVehicle = GetVehiclePedIsTryingToEnter(playerPed)
+
+        if DoesEntityExist(targetVehicle) then
+            local targetPed = GetPedInVehicleSeat(targetVehicle, -1)
+            
+            -- Prevent hijacking NPC vehicles if not allowed
+            if not Config.AllowStealNPCCars and not IsPedAPlayer(targetPed) then
+                -- Cancel the vehicle entry
+                ClearPedTasksImmediately(playerPed)
+                if Config.Debug then print("NPC vehicle hijacking prevented.") end
+            end
+
+            -- Allow NPC carjacking logic if permitted
+            if Config.AllowStealNPCCars and not IsPedAPlayer(targetPed) then
+                TaskLeaveVehicle(targetPed, targetVehicle, 16)
+                Citizen.Wait(500)
+                TaskWarpPedIntoVehicle(playerPed, targetVehicle, -1)
+                SetVehicleEngineOn(targetVehicle, true, true, false)
+                if Config.Debug then print("Player carjacked NPC vehicle.") end
             end
         end
+
         Citizen.Wait(100)
     end
 end)
+
 
 -- Exported function to change NPC driving style
 function ChangeNPCDrivingStyle(drivingStyle)

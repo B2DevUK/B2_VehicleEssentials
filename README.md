@@ -1,4 +1,4 @@
-# b2_vehicleEssentials V1.1.0
+# b2_vehicleEssentials V1.2.0
 
 ## SUPPORT DISCORD: discord.gg/KZRBA6H5kR 
 
